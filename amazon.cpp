@@ -9,6 +9,8 @@
 #include "db_parser.h"
 #include "product_parser.h"
 #include "util.h"
+#include "mydatastore.h"
+#include "datastore.h"
 
 using namespace std;
 struct ProdNameSorter {
@@ -29,7 +31,7 @@ int main(int argc, char* argv[])
      * Declare your derived DataStore object here replacing
      *  DataStore type to your derived type
      ****************/
-    DataStore ds;
+    MyDataStore ds;
 
 
 
@@ -46,7 +48,7 @@ int main(int argc, char* argv[])
     parser.addSectionParser("users", userSectionParser);
 
     // Now parse the database to populate the DataStore
-    if( parser.parse(argv[1], ds) ) {
+    if( parser.parse(std::string(argv[1]), static_cast<DataStore&>(ds)) ) {
         cerr << "Error parsing!" << endl;
         return 1;
     }
@@ -94,15 +96,64 @@ int main(int argc, char* argv[])
                 string filename;
                 if(ss >> filename) {
                     ofstream ofile(filename.c_str());
+                    //displayProducts(hits);
                     ds.dump(ofile);
                     ofile.close();
                 }
                 done = true;
             }
+            else if (cmd == "VIEWCART")
+            {
+                string username;
+                if (ss >> username)
+                {
+                    ds.viewCart(username);
+                    //itemCount ++;
+                }
+                else
+                {
+                    cout << "Invalid VIEWCART command format" << endl;
+                }
+            }
+            else if (cmd == "ADD")
+            {
+                string username;
+                int hitNumber = -1;
+                if (ss >> username >> hitNumber)
+                {
+                  //cout << hitNumber << endl;
+                  //cout << hits.size() << endl;
+                  
+                    if (hitNumber > 0 && hitNumber <= static_cast<int>(hits.size()))
+                    {
+                      //cout << "a" << endl;
+                      ds.addToCart(username, hits[hitNumber - 1]);
+                    }
+                    else
+                    {
+                        cout << "Invalid hit number" << endl;
+                    }
+                }
+                else
+                {
+                    cout << "Invalid ADD command format" << endl;
+                }
+                //displayProducts(hits);
+            }
+            else if (cmd == "BUYCART")
+            {
+                string username;
+                if (ss >> username)
+                {
+                    ds.buyCart(username);
+                }
+                else{
+                    cout << "Invalid BUYCART command format" << endl;
+                }
+                //displayProducts(hits);
+            }
+    
 	    /* Add support for other commands here */
-
-
-
 
             else {
                 cout << "Unknown command" << endl;
@@ -110,6 +161,9 @@ int main(int argc, char* argv[])
         }
 
     }
+    //displayProducts(hits);
+    //delete productSectionParser;
+    //delete userSectionParser;
     return 0;
 }
 

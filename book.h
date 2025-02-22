@@ -1,20 +1,23 @@
-#ifndef BOOK
-#define BOOK
+//#ifndef BOOK_H
+//#define BOOK_H
 #include <string>
+#include <set>
+#include "util.h"
+#include "product.h"
 using namespace std;
 
 class Book : public Product {
 public:
-  Book(const std::string category, double price, int qty, int isbn, const std::string author);
-  virtual ~Book;
+  Book(const std::string& category, const std::string& name, double price, int qty, const std::string& isbn, const std::string& author);
+  virtual ~Book();
 
   std::set<std::string> keywords() const override;
 
   std::string displayString() const override;
 
-  void dump(std::ostream& os) const override;
+  virtual void dump(std::ostream& os) const;
 
-private;
+protected:
   std::string isbn_;
   std::string author_;
 

@@ -17,14 +17,14 @@ std::set<std::string> parseStringToWords(string rawWords)
 {
   for (char& ch : rawWords) //remove punctuation
   {
-    if(ispunt(rawWords))
+    if(ispunct(ch))
     {
       ch = ' ';
     }
   }
-  set<string> wordSet;
-  stringstream ss(rawWords);
-  string word;
+  std::set<std::string> wordSet;
+  std::stringstream ss(rawWords);
+  std::string word;
   
   while (ss >> word)
   {
