@@ -63,7 +63,7 @@ void MyDataStore::viewCart(std::string& username)
   else
   {
     int itemCount = 1;
-    for(std::vector<Product*>::iterator it = products_.begin(); it != products_.end(); ++it)
+    for(std::vector<Product*>::iterator it = carts[username].begin(); it != carts[username].end(); ++it)
     {
       cout << "Item " << itemCount << endl;
       std::cout << (*it) -> displayString() << endl;
